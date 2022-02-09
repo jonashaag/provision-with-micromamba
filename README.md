@@ -10,7 +10,7 @@ See [action.yml](./action.yml).
 
 ## Example usage
 
-```
+```yaml
 name: test
 on:
   push: null
@@ -46,7 +46,7 @@ jobs:
 
 ## Example with customization
 
-```
+```yaml
 name: test
 on:
   push: null
@@ -77,7 +77,7 @@ Use `cache-downloads` to enable download caching across action runs (`.tar.bz2` 
 By default the cache is invalidated once per day. See the `cache-downloads-key` option
 for custom cache invalidation.
 
-```
+```yaml
 - name: install mamba
   uses: mamba-org/provision-with-micromamba@main
   with:
@@ -91,7 +91,7 @@ By default the cache is invalidated whenever the contents of the `environment-fi
 or `extra-specs` change, plus once per day. See the `cache-env-key` option for
 custom cache invalidation.
 
-```
+```yaml
 - name: install mamba
   uses: mamba-org/provision-with-micromamba@main
   with:
@@ -106,13 +106,19 @@ More examples may be found in this repository's [tests](.github/workflows).
 
 Some shells require special syntax (e.g. `bash -l {0}`). You can set this up with the `default` option:
 
-```
+```yaml
 jobs:
   myjob:
     defaults:
       run:
         shell: bash -l {0}
-...
+
+# Or top-level:
+defaults:
+  run:
+    shell: bash -l {0}
+jobs:
+  ...
 ```
 
 Find the reasons below (taken from [setup-miniconda](https://github.com/conda-incubator/setup-miniconda/blob/master/README.md#important)):
