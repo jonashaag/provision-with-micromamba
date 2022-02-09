@@ -6,29 +6,9 @@ GitHub Action to provision a CI instance using micromamba
 
 ## Inputs
 
-### `environment-file`
-
-**Optional** The the `environment.yml` file for the conda environment. Default is `environment.yml`.
-If it is `false`, no environment will be created (only Micromamba will be installed).
-
-### `environment-name`
-
-**Optional** Specify a custom environment name.  If set it overwrites the name specified in the `environment-file`.
-Required if `environment-file` is a `.lock` file or `false`.
-
-### `micromamba-version`
-
-**Optional** Specifiy a custom micromamba version. Use `"latest"` for bleeding edge.
-
-### `extra-specs`
-
-**Optional** Specifiy additional specifications (packages) to install. Pretty useful when using matrix builds to pin versions of a test/run dependency.
-
-Note: for multiple packages, use multiline syntax (see examples below)
+See [action.yml](./action.yml).
 
 ## Example usage
-
-Note: some shells need special syntax for invocation (e.g. `bash -l {0}`). You can set this up in [defaults](setup_default).
 
 ```
 name: test
@@ -45,17 +25,19 @@ jobs:
       - name: install mamba
         uses: mamba-org/provision-with-micromamba@main
 
-      # linux and osx
+      # Linux and macOS
       - name: run python
         shell: bash -l {0}
         run: |
           python -c "import numpy"
 
-      # windows
+      # Windows
+      # With Powershell:
       - name: run python
         shell: powershell
         run: |
           python -c "import numpy"
+      # Or with cmd:
       - name: run cmd.exe
         shell: cmd /C CALL {0}
         run: >-
@@ -89,6 +71,37 @@ jobs:
             pytest=${{ matrix.pytest }}
 ```
 
+## Example with download caching
+
+Use `cache-downloads` to enable download caching across action runs (`.tar.bz2` files).
+By default the cache is invalidated once per day. See the `cache-downloads-key` option
+for custom cache invalidation.
+
+```
+- name: install mamba
+  uses: mamba-org/provision-with-micromamba@main
+  with:
+    cache-downloads: true
+```
+
+## Example with environment caching
+
+Use `cache-env` to cache the entire env (`envs/myenv` directory) across action runs.
+By default the cache is invalidated whenever the contents of the `environment-file`
+or `extra-specs` change, plus once per day. See the `cache-env-key` option for
+custom cache invalidation.
+
+```
+- name: install mamba
+  uses: mamba-org/provision-with-micromamba@main
+  with:
+    cache-env: true
+```
+
+## More examples
+
+More examples may be found in this repository's [tests](.github/workflows).
+
 ## IMPORTANT
 
 Some shells require special syntax (e.g. `bash -l {0}`). You can set this up with the `default` option:
@@ -112,12 +125,6 @@ Find the reasons below (taken from [setup-miniconda](https://github.com/conda-in
   [Github Actions Documentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#using-a-specific-shell)
   and
   [thread](https://github.community/t5/GitHub-Actions/How-to-share-shell-profile-between-steps-or-how-to-use-nvm-rvm/td-p/33185).
-- Sh shells do not use `~/.profile` or `~/.bashrc` so these shells need to be
-  explicitely declared as `shell: sh -l {0}` on steps that need to be properly
-  activated (or use a default shell). This is because sh shells are executed
-  with `sh -e {0}` thus ignoring updated on bash profile files made by
-  `conda init bash`. See
-  [Github Actions Documentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#using-a-specific-shell).
 - Cmd shells do not run `Autorun` commands so these shells need to be
   explicitely declared as `shell: cmd /C call {0}` on steps that need to be
   properly activated (or use a default shell). This is because cmd shells are
@@ -125,17 +132,7 @@ Find the reasons below (taken from [setup-miniconda](https://github.com/conda-in
   disabled execution of `Command Processor/Autorun` Windows registry keys, which
   is what `conda init cmd.exe` sets. See
   [Github Actions Documentation](https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions#using-a-specific-shell).
-- For caching to work properly, you will need to set the `use-only-tar-bz2`
-  option to `true`.
-- Some options (e.g. `use-only-tar-bz2`) are not available on the default conda
-  installed on Windows VMs, be sure to use `auto-update-conda` or provide a
-  version of conda compatible with the option.
-- If you plan to use a `environment.yaml` file to set up the environment, the
-  action will read the `channels`listed in the key (if found). If you provide
-  the `channels` input in the action they must not conflict with what was
-  defined in `environment.yaml`, otherwise the conda solver might find conflicts
-  and result in very long install times.
-- Conda activation does not correctly work on `sh`. Please use `bash`.
+- `sh` is not supported. Please use `bash`.
 
 ## Development
 
