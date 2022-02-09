@@ -11,34 +11,29 @@ See [action.yml](./action.yml).
 ## Example usage
 
 ```yaml
-name: test
-on:
-  push: null
-
 jobs:
   test:
     runs-on: ubuntu-latest
-    name: test
     steps:
       - uses: actions/checkout@v2
 
-      - name: install mamba
+      - name: Install Conda environment with Micromamba
         uses: mamba-org/provision-with-micromamba@main
 
       # Linux and macOS
-      - name: run python
+      - name: Run Python
         shell: bash -l {0}
         run: |
           python -c "import numpy"
 
       # Windows
       # With Powershell:
-      - name: run python
+      - name: Run Python
         shell: powershell
         run: |
           python -c "import numpy"
       # Or with cmd:
-      - name: run cmd.exe
+      - name: Run cmd.exe
         shell: cmd /C CALL {0}
         run: >-
           micromamba info && micromamba list
@@ -47,21 +42,16 @@ jobs:
 ## Example with customization
 
 ```yaml
-name: test
-on:
-  push: null
-
 jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         pytest: ["6.1", "6.2"]
-    name: test
     steps:
       - uses: actions/checkout@v2
 
-      - name: install mamba
+      - name: Install Conda environment with Micromamba
         uses: mamba-org/provision-with-micromamba@main
         with:
           environment-file: myenv.yaml
@@ -78,7 +68,7 @@ By default the cache is invalidated once per day. See the `cache-downloads-key` 
 for custom cache invalidation.
 
 ```yaml
-- name: install mamba
+- name: Install Conda environment with Micromamba
   uses: mamba-org/provision-with-micromamba@main
   with:
     cache-downloads: true
@@ -92,7 +82,7 @@ or `extra-specs` change, plus once per day. See the `cache-env-key` option for
 custom cache invalidation.
 
 ```yaml
-- name: install mamba
+- name: Install Conda environment with Micromamba
   uses: mamba-org/provision-with-micromamba@main
   with:
     cache-env: true
