@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Install Conda environment with Micromamba
+      - name: Install Conda environment from environment.yml
         uses: mamba-org/provision-with-micromamba@main
 
       # Linux and macOS
@@ -55,7 +55,7 @@ jobs:
         uses: mamba-org/provision-with-micromamba@main
         with:
           environment-file: myenv.yaml
-          environment-name: myenv
+          environment-name: myenvname
           extra-specs: |
             python=3.7
             pytest=${{ matrix.pytest }}
@@ -64,8 +64,8 @@ jobs:
 ## Example with download caching
 
 Use `cache-downloads` to enable download caching across action runs (`.tar.bz2` files).
-By default the cache is invalidated once per day. See the `cache-downloads-key` option
-for custom cache invalidation.
+
+By default the cache is invalidated once per day. See the `cache-downloads-key` option for custom cache invalidation.
 
 ```yaml
 - name: Install Conda environment with Micromamba
@@ -76,10 +76,10 @@ for custom cache invalidation.
 
 ## Example with environment caching
 
-Use `cache-env` to cache the entire env (`envs/myenv` directory) across action runs.
+Use `cache-env` to cache the entire Conda environment (`envs/myenv` directory) across action runs.
+
 By default the cache is invalidated whenever the contents of the `environment-file`
-or `extra-specs` change, plus once per day. See the `cache-env-key` option for
-custom cache invalidation.
+or `extra-specs` change, plus once per day. See the `cache-env-key` option for custom cache invalidation.
 
 ```yaml
 - name: Install Conda environment with Micromamba
