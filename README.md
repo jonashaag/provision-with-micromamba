@@ -2,11 +2,7 @@
 
 [![test](https://github.com/mamba-org/provision-with-micromamba/workflows/test/badge.svg)](https://github.com/mamba-org/provision-with-micromamba/actions?query=workflow%3Atest)
 
-GitHub Action to provision a CI instance using micromamba
-
-## Inputs
-
-See [action.yml](./action.yml).
+GitHub Action to provision a CI instance using micromamba.
 
 ## Example usage
 
@@ -38,6 +34,9 @@ jobs:
         run: >-
           micromamba info && micromamba list
 ```
+
+> **Please** see the **[IMPORTANT](#IMPORTANT)** notes on additional information
+> on environment activation.
 
 ## Example with customization
 
@@ -91,6 +90,10 @@ or `extra-specs` change, plus once per day. See the `cache-env-key` option for c
 ## More examples
 
 More examples may be found in this repository's [tests](.github/workflows).
+
+## Reference
+
+See [action.yml](./action.yml).
 
 ## IMPORTANT
 
